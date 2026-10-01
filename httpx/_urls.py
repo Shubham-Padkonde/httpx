@@ -613,7 +613,7 @@ class QueryParams(typing.Mapping[str, str]):
         return bool(self._dict)
 
     def __hash__(self) -> int:
-        return hash(str(self))
+        return hash(tuple(sorted(self.multi_items())))
 
     def __eq__(self, other: typing.Any) -> bool:
         if not isinstance(other, self.__class__):

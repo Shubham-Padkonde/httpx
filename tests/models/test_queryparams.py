@@ -134,3 +134,21 @@ def test_queryparams_are_hashable():
     )
 
     assert len(set(params)) == 2
+
+
+@pytest.mark.parametrize(
+    "left, right",
+    [
+        ("a=1&b=2", "b=2&a=1"),
+        ("a=1&a=2", "a=2&a=1"),
+        ("a=1&a=1&b=2", "b=2&a=1&a=1"),
+    ],
+)
+def test_equal_queryparams_have_equal_hashes(left, right):
+    first = httpx.QueryParams(left)
+    second = httpx.QueryParams(right)
+
+    assert first == second
+    assert hash(first) == hash(second)
+    assert len({first, second}) == 1
+    assert {first: "value"}[second] == "value"
